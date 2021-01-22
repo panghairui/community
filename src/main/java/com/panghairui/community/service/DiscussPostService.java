@@ -13,6 +13,7 @@ public class DiscussPostService {
     @Autowired(required = false)
     private DiscussPostMapper discussPostMapper;
 
+    //当前页显示的帖子集合
     public List<DiscussPost> findDiscussPosts(int userId, int offerset, int limit) {
         return discussPostMapper.selectDiscussPosts(userId, offerset, limit);
     }
