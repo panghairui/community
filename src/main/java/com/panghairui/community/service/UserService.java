@@ -173,6 +173,7 @@ public class UserService implements CommunityConstant {
 
     public int updatePassword(String prePassword, String newPassword) {
         User user = hostHolder.getUser();
+        newPassword = CommunityUtil.md5(newPassword + user.getSalt());
         return userMapper.updatePassword(user.getId(), newPassword);
     }
 

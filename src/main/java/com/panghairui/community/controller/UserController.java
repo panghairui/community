@@ -116,12 +116,11 @@ public class UserController {
     public String updatePassword(Model model, String prePassword, String newPassword) {
         User user = hostHolder.getUser();
         String password = user.getPassword();
-        System.out.println(password + "||||" + prePassword);
+        prePassword = CommunityUtil.md5(prePassword + user.getSalt());
         if(StringUtils.isBlank(prePassword)) {
             model.addAttribute("preerror", "原始密码不能为空！");
             return "/site/setting";
         }
-
         if(!password.equals(prePassword)) {
             model.addAttribute("preerror", "原始密码不正确！");
             return "/site/setting";
