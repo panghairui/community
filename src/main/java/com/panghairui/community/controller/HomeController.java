@@ -4,7 +4,10 @@ import com.panghairui.community.entity.DiscussPost;
 import com.panghairui.community.entity.Page;
 import com.panghairui.community.entity.User;
 import com.panghairui.community.service.DiscussPostService;
+import com.panghairui.community.service.LikeService;
 import com.panghairui.community.service.UserService;
+import com.panghairui.community.util.CommunityConstant;
+import com.panghairui.community.util.CommunityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
 
     @Autowired(required = false)
     private DiscussPostService discussPostService;
@@ -26,8 +29,11 @@ public class HomeController {
     @Autowired(required = false)
     private UserService userService;
 
+    @Autowired
+    private LikeService likeService;
+
     @RequestMapping(path = "/index", method = RequestMethod.GET)
-    public String getIndexPage(Model model, Page page) {
+    public String getIndexPage(Model model, Page page){
         page.setRows(discussPostService.findDiscussPostRows(0));
         page.setPath("/index");
         List<DiscussPost> list = discussPostService.findDiscussPosts(0, page.getOffset(), page.getLimit());
@@ -38,6 +44,10 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+
+                long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
+
                 discussPosts.add(map);
             }
         }
